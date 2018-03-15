@@ -73,3 +73,11 @@ Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+*.uproject
+Demo/Config/
+Demo/Saved/
+Demo/Intermediate/
+Demo/Content/StarterContent/
+
+
