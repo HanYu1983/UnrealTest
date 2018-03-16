@@ -77,5 +77,4 @@ DerivedDataCache/*
 Demo/Config/
 Demo/Saved/
 Demo/Intermediate/
-
-
+*.log
