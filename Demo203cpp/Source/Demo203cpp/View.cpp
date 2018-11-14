@@ -36,10 +36,13 @@ void AView::BeginPlay()
 		mover->onDeadEvent.AddDynamic(this, &AView::doOnMoverDead);
 		movers.Add(mover);
 	}
+
+	
 }
 
 void AView::doOnMoverDead(AMover* mover) {
-	getCubeData();
+	//onCubesStopEvent.Broadcast(getCubeData());
+	onCubesStopEvent.Broadcast();
 }
 
 AMover* AView::getMoverById(int32 pid) {
@@ -55,16 +58,16 @@ AMover* AView::getMoverById(int32 pid) {
 	return nullptr;
 }
 
-void AView::DoEatCube() {
-	UE_LOG(LogTemp, Warning, TEXT("%s"), TEXT("DoEatCube2!!"));
+void AView::DoEatCube(TArray<int32> eatCube) {
+	UE_LOG(LogTemp, Warning, TEXT("%s"), TEXT("DoEatCube23!!"));
 
-	TArray<int32> eatCube;
+	/*TArray<int32> eatCube;
 	eatCube.Add(13);
 	eatCube.Add(14);
 	eatCube.Add(15);
 	eatCube.Add(25);
 	eatCube.Add(35);
-	eatCube.Add(78);
+	eatCube.Add(78);*/
 
 	for (int32 i = 0; i < eatCube.Num(); ++i) {
 		int32 pid = eatCube[i];
@@ -125,8 +128,8 @@ void AView::DoEatCube() {
 	}
 }
 
-TArray<int> AView::getCubeData() {
-	TArray<int> data;
+TArray<int32> AView::getCubeData() {
+	TArray<int32> data;
 	for (int32 i = 0; i < moverCount; ++i) {
 		data.Add(0);
 	}
