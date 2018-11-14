@@ -30,17 +30,17 @@ TArray<int32> ACubeModel::CalculateCubes(TArray<int32> cubes) {
 	for (int32 i = 0; i < cubes.Num(); ++i) {
 		UE_LOG(LogTemp, Warning, TEXT("%i"), cubes[i]);
 	}
-	// 盤面寬高
+	// board width, height
 	const int W = 10;
 	const int H = 10;
 	
-	// 有向圖資料
+	// graph data
 	bool linkLeft[W* H];
 	bool linkUp[W* H];
 	bool linkRight[W* H];
 	bool linkDown[W* H];
 
-	// 初使化有向圖資料
+	// init graph data
 	for (int i = 0; i < W*H; ++i) {
 		linkLeft[i] = false;
 		linkUp[i] = false;
@@ -48,11 +48,11 @@ TArray<int32> ACubeModel::CalculateCubes(TArray<int32> cubes) {
 		linkDown[i] = false;
 	}
 
-	// 建立有向圖
+	// create graph
 	for (int i = 0; i < W*H; ++i) {
 		int prevStyle = cubes[i];
 		int row = i / W;
-		// 連結上
+		// link up
 		if (row > 0) {
 			int up = i - W;
 			int currStyle = cubes[up];
@@ -60,7 +60,7 @@ TArray<int32> ACubeModel::CalculateCubes(TArray<int32> cubes) {
 				linkUp[i] = true;
 			}
 		}
-		// 連結下
+		// link down
 		if (row < H - 1) {
 			int down = i + W;
 			int currStyle = cubes[down];
@@ -70,7 +70,7 @@ TArray<int32> ACubeModel::CalculateCubes(TArray<int32> cubes) {
 		}
 		
 		int column = i % W;
-		// 連結左
+		// link left
 		if (column > 0) {
 			int left = i - 1;
 			int currStyle = cubes[left];
@@ -78,7 +78,7 @@ TArray<int32> ACubeModel::CalculateCubes(TArray<int32> cubes) {
 				linkLeft[i] = true;
 			}
 		}
-		// 連結右
+		// link right
 		if (column < W - 1) {
 			int right = i + 1;
 			int currStyle = cubes[right];
@@ -88,18 +88,18 @@ TArray<int32> ACubeModel::CalculateCubes(TArray<int32> cubes) {
 		}
 	}
 	
-	// 計算連結方塊
+	// compute cube linking
 	TSet<int32> eatCube;
 	TSet<int32> tmpCubes;
 
 	for (int i = 0; i < W*H; ++i) {
 		int startAt = i;
-		// 重新計算
+		// recalculate
 		tmpCubes.Reset();
-		// 先加入原點
+		// add origin first
 		tmpCubes.Add(startAt);
 
-		// 先計算左右邊
+		// compute left right side first
 		for (int currPos = startAt;;) {
 			int column = currPos % W;
 			if (column > 0) {
@@ -134,19 +134,18 @@ TArray<int32> ACubeModel::CalculateCubes(TArray<int32> cubes) {
 			}
 		}
 		
-		// 如果連結數量大於3個, 就合併
+		// if amount of linked cube more then 3, combine
 		bool hasMoreThen3 = tmpCubes.Num() >= 3;
 		if (hasMoreThen3) {
-			// 合併
 			eatCube = eatCube.Union(tmpCubes);
 		}
 
-		// 重新計算
+		// recalculate
 		tmpCubes.Reset();
-		// 先加入原點
+		// add origin first
 		tmpCubes.Add(startAt);
 
-		// 再計算上下
+		// compute up down side
 		for (int currPos = startAt;;) {
 			int row = currPos / W;
 			if (row > 0) {
@@ -181,7 +180,7 @@ TArray<int32> ACubeModel::CalculateCubes(TArray<int32> cubes) {
 			}
 		}
 
-		// 如果連結數量大於3個, 就合併
+		// if amount of linked cube more then 3, combine
 		hasMoreThen3 = tmpCubes.Num() >= 3;
 		if (hasMoreThen3) {
 			eatCube = eatCube.Union(tmpCubes);
